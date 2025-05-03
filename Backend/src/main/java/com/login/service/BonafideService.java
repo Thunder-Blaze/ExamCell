@@ -33,7 +33,6 @@ public class BonafideService {
     @Transactional
     public BonafideResponse generateCertificate(String studentName, String email, String course, 
             String semester, String purpose) {
-        // Derive enrollment number from email
         String enrollmentNumber = email.split("@")[0].toUpperCase();
         
         String date = LocalDateTime.now().toString();
@@ -86,14 +85,12 @@ public class BonafideService {
         LocalDateTime now = LocalDateTime.now();
         certificateRepository.findByExpiresAtBeforeAndIsActiveTrue(now).forEach(certificate -> {
             try {
-                // Delete the physical file
                 Path filePath = Paths.get(certificate.getFilePath());
                 if (Files.exists(filePath)) {
                     Files.delete(filePath);
                     System.out.println("Deleted file: " + filePath);
                 }
                 
-                // Mark as inactive in database
                 certificate.setActive(false);
                 certificateRepository.save(certificate);
                 System.out.println("Marked certificate as inactive: " + certificate.getUid());
