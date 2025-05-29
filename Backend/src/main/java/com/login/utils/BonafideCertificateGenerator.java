@@ -89,12 +89,10 @@ public class BonafideCertificateGenerator {
                 .setTextAlignment(TextAlignment.CENTER));
         document.add(new Paragraph("Email: contact@iiitl.ac.in    website: iiitl.ac.in").setFontSize(10)
                 .setTextAlignment(TextAlignment.CENTER));
-
         // Certificate number
         String certNumber = "Certificate No: " + generateCertificateNumber();
         document.add(new Paragraph(certNumber).setFontSize(10).setTextAlignment(TextAlignment.RIGHT));
         document.add(new Paragraph("Date: " + date).setTextAlignment(TextAlignment.RIGHT));
-
         document.add(new Paragraph("\nTo whom it May Concern").setBold().setFontSize(13)
                 .setTextAlignment(TextAlignment.CENTER));
 
