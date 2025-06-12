@@ -10,6 +10,7 @@ import TemplatesPage from "./pages/TemplatesPage"
 import GeneratedCertificatesPage from "./pages/GeneratedCertificatesPage"
 import History from "./pages/History";
 import InputForm from "./pages/InputForm";
+import ChangePassword from "./components/ChangePassword";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/generated-certificates" element={<GeneratedCertificatesPage />} />
           <Route path="/History" element={<History/>} />
           <Route path="/inputform" element={<InputForm />} />
+          <Route path="/change-password" element={<ChangePassword />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

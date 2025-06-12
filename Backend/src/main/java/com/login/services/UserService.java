@@ -1,6 +1,7 @@
 package com.login.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,6 +27,8 @@ public class UserService {
     
     @Autowired
     private JwtUtil jwtUtil;
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public boolean sendLoginOtp(String email) {
         if (!IIITL_EMAIL_PATTERN.matcher(email).matches()) {
@@ -72,5 +75,28 @@ public class UserService {
         } else {
             return new JwtResponse(null, email, "User not found! Please request an OTP first.");
         }
+    }
+
+    public boolean changePassword(String email, String currentPassword, String newPassword) {
+        if (!IIITL_EMAIL_PATTERN.matcher(email).matches()) {
+            throw new IllegalArgumentException("Invalid email format");
+        }
+        
+        Optional<UserEntity> userEntityOpt = userRepository.findById(email);
+        if (userEntityOpt.isPresent()) {
+            UserEntity userEntity = userEntityOpt.get();
+            if (userEntity.getPassword() == null) {
+                userEntity.setPassword(passwordEncoder.encode(newPassword));
+                userRepository.save(userEntity);
+                return true;
+            }
+            if (passwordEncoder.matches(currentPassword, userEntity.getPassword())) {
+                userEntity.setPassword(passwordEncoder.encode(newPassword));
+                userRepository.save(userEntity);
+                return true;
+            }
+            throw new IllegalArgumentException("Current password is incorrect");
+        }
+        throw new IllegalArgumentException("User not found");
     }
 }

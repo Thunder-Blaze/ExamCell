@@ -101,4 +101,32 @@ public class UserController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);
     }
+
+    private static class PasswordChangeRequest {
+        @NotBlank @Email @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@iiitl\\.ac\\.in$")
+        private String email;
+        private String currentPassword;
+        @NotBlank private String newPassword;
+        public String getEmail() { return email; }
+        public String getCurrentPassword() { return currentPassword; }
+        public String getNewPassword() { return newPassword; }
+    }
+
+    @PostMapping(value = "/change-password", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> changePassword(@RequestBody PasswordChangeRequest request) {
+        try {
+            boolean success = userService.changePassword(
+                request.getEmail(),
+                request.getCurrentPassword(),
+                request.getNewPassword()
+            );
+            return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new OtpResponse(success, success ? "Password changed successfully" : "Failed to change password", request.getEmail()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new OtpResponse(false, e.getMessage(), request.getEmail()));
+        }
+    }
 }

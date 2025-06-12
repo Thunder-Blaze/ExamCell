@@ -17,6 +17,9 @@ public class UserEntity {
     @Column(name = "otp_created_at")
     private LocalDateTime otpCreatedAt;
     
+    @Column(name = "password")
+    private String password;
+    
     public UserEntity() {
     }
     
@@ -48,6 +51,14 @@ public class UserEntity {
     
     public void setOtpCreatedAt(LocalDateTime otpCreatedAt) {
         this.otpCreatedAt = otpCreatedAt;
+    }
+    
+    public String getPassword() {
+        return password;
+    }
+    
+    public void setPassword(String password) {
+        this.password = password;
     }
     
     public boolean isOtpExpired() {
