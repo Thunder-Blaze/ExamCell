@@ -118,7 +118,12 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-card to-accent p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background/67" style={{
+      backgroundImage: "url('/bg-image.jpg')",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundBlendMode: "overlay",
+    }}>
       <Card className="w-full max-w-md shadow-lg border-ring/20 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-32 h-32 bg-primary/5 rounded-full -translate-x-16 -translate-y-16" />
         <div className="absolute bottom-0 right-0 w-32 h-32 bg-primary/5 rounded-full translate-x-16 translate-y-16" />
@@ -268,7 +273,7 @@ export default function AdminLogin() {
             <div className="text-center text-sm text-muted-foreground">
               Cannot Login ?{" "}
               <a href="#" className="text-primary hover:text-primary/90 transition-colors font-medium">
-                Contact Admin
+                Contact Technician
               </a>
             </div>
           </CardFooter>

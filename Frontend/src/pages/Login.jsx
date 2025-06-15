@@ -88,7 +88,7 @@ export default function Login() {
         if (data.email) {
           sessionStorage.setItem('email', JSON.stringify(data.email));
         }
-        navigate('/inputform');
+        navigate('/');
       } else {
         throw new Error('No token received');
       }
@@ -109,7 +109,12 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-card to-accent p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background/67" style={{
+      backgroundImage: "url('/bg-image.jpg')",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundBlendMode: "overlay",
+    }}>
       <Card className="w-full max-w-md shadow-lg border-ring/20 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-32 h-32 bg-primary/5 rounded-full -translate-x-16 -translate-y-16" />
         <div className="absolute bottom-0 right-0 w-32 h-32 bg-primary/5 rounded-full translate-x-16 translate-y-16" />
@@ -156,6 +161,7 @@ export default function Login() {
                   }
                 }}
                 required
+                autoComplete="rollno"
                 disabled={isOtpSent}
                 className={`${rollNumberError ? "border-destructive focus-visible:ring-destructive" : "focus-visible:ring-primary"} transition-colors outline-0 border-0`}
               />
