@@ -1,10 +1,17 @@
-import React from "react"
-import { Eye, UserX } from "lucide-react"
+import React from "react";
+import { Eye, UserX } from "lucide-react";
 
-import { Badge } from "./ui/badge"
-import { Button } from "./ui/button"
-import { Card } from "./ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
+import { Card } from "./ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
 
 const users = [
   {
@@ -37,7 +44,7 @@ const users = [
     department: "Medicine",
     status: "Active",
   },
-]
+];
 
 export function UserManagementTable() {
   return (
@@ -52,7 +59,9 @@ export function UserManagementTable() {
                 <TableHead className="text-[#ffe2f3]">Role</TableHead>
                 <TableHead className="text-[#ffe2f3]">Department</TableHead>
                 <TableHead className="text-[#ffe2f3]">Status</TableHead>
-                <TableHead className="text-right text-[#ffe2f3]">Action</TableHead>
+                <TableHead className="text-right text-[#ffe2f3]">
+                  Action
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -63,7 +72,9 @@ export function UserManagementTable() {
                   <TableCell>{user.department}</TableCell>
                   <TableCell>
                     <Badge
-                      variant={user.status === "Active" ? "outline" : "secondary"}
+                      variant={
+                        user.status === "Active" ? "outline" : "secondary"
+                      }
                       className={
                         user.status === "Active"
                           ? "bg-pink-100 text-primary border-0"
@@ -92,5 +103,5 @@ export function UserManagementTable() {
         </div>
       </div>
     </Card>
-  )
+  );
 }

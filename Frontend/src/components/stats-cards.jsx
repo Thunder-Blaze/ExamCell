@@ -1,7 +1,7 @@
-import React from "react"
-import { BarChart3, FileText, Users, CheckCircle } from "lucide-react"
+import React from "react";
+import { BarChart3, FileText, Users, CheckCircle } from "lucide-react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 export function StatsCards() {
   const stats = [
@@ -37,7 +37,7 @@ export function StatsCards() {
       iconColor: "text-[#ffe2f3]",
       iconBg: "bg-primary",
     },
-  ]
+  ];
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -56,5 +56,5 @@ export function StatsCards() {
         </Card>
       ))}
     </div>
-  )
+  );
 }

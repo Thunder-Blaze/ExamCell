@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Backpack, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -23,21 +30,21 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
     setError("");
-    
+
     try {
       // TODO: Replace with your actual API endpoint
-      const response = await fetch('http://localhost:8080/api/request-otp', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8080/api/request-otp", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: formData.rollno+"@iiitl.ac.in" }),
+        body: JSON.stringify({ email: formData.rollno + "@iiitl.ac.in" }),
       });
 
-      console.log(response)
+      console.log(response);
 
       if (!response.ok) {
-        throw new Error('Failed to send OTP');
+        throw new Error("Failed to send OTP");
       }
 
       // console.log(response);
@@ -47,12 +54,12 @@ export default function Login() {
       console.log(data);
 
       if (data.success == false) {
-        throw new Error('Failed to send OTP');
+        throw new Error("Failed to send OTP");
       }
 
       setIsOtpSent(true);
     } catch (err) {
-      setError(err.message || 'Failed to send OTP. Please try again.');
+      setError(err.message || "Failed to send OTP. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -62,38 +69,38 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
     setError("");
-    
+
     try {
-      const response = await fetch('http://localhost:8080/api/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8080/api/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: formData.rollno+"@iiitl.ac.in",
+          email: formData.rollno + "@iiitl.ac.in",
           otp: formData.otp,
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Invalid OTP');
+        throw new Error("Invalid OTP");
       }
 
-      console.log(response)
+      console.log(response);
 
       const data = await response.json();
-      
+
       if (data.token) {
-        sessionStorage.setItem('token', data.token);
+        sessionStorage.setItem("token", data.token);
         if (data.email) {
-          sessionStorage.setItem('email', JSON.stringify(data.email));
+          sessionStorage.setItem("email", JSON.stringify(data.email));
         }
-        navigate('/dashboard', { replace: true });
+        navigate("/dashboard", { replace: true });
       } else {
-        throw new Error('No token received');
+        throw new Error("No token received");
       }
     } catch (err) {
-      setError(err.message || 'Login failed. Please try again.');
+      setError(err.message || "Login failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -101,7 +108,9 @@ export default function Login() {
 
   const validateRollNumber = (rollno) => {
     if (!ROLL_NUMBER_REGEX.test(rollno)) {
-      setRollNumberError("Invalid roll number format. Format: LCS/LIT/LCI/LCB + XXXX (year) + 0 + 01-60");
+      setRollNumberError(
+        "Invalid roll number format. Format: LCS/LIT/LCI/LCB + XXXX (year) + 0 + 01-60",
+      );
       return false;
     }
     setRollNumberError("");
@@ -109,16 +118,19 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-background/67" style={{
-      backgroundImage: "url('/bg-image.jpg')",
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundBlendMode: "overlay",
-    }}>
+    <div
+      className="min-h-screen flex items-center justify-center p-4 bg-background/67"
+      style={{
+        backgroundImage: "url('/bg-image.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundBlendMode: "overlay",
+      }}
+    >
       <Card className="w-full max-w-md shadow-lg border-ring/20 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-32 h-32 bg-primary/5 rounded-full -translate-x-16 -translate-y-16" />
         <div className="absolute bottom-0 right-0 w-32 h-32 bg-primary/5 rounded-full translate-x-16 translate-y-16" />
-        
+
         <CardHeader className="space-y-1 bg-card/50 backdrop-blur-sm rounded-t-lg relative z-10">
           <div className="flex justify-center mb-2">
             <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center ring-4 ring-primary/20">
@@ -138,15 +150,21 @@ export default function Login() {
               </svg>
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold text-center text-foreground">Welcome to ExamCell</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center text-foreground">
+            Welcome to ExamCell
+          </CardTitle>
           <CardDescription className="text-center text-muted-foreground">
-            {isOtpSent ? "Enter the OTP sent to your registered email" : "Enter your roll number to receive OTP"}
+            {isOtpSent
+              ? "Enter the OTP sent to your registered email"
+              : "Enter your roll number to receive OTP"}
           </CardDescription>
         </CardHeader>
         <form onSubmit={isOtpSent ? handleLogin : handleSendOtp}>
           <CardContent className="space-y-4 p-6 relative z-10">
             <div className="space-y-2">
-              <Label htmlFor="rollno" className="text-foreground font-medium">Roll Number</Label>
+              <Label htmlFor="rollno" className="text-foreground font-medium">
+                Roll Number
+              </Label>
               <Input
                 id="rollno"
                 type="text"
@@ -187,13 +205,17 @@ export default function Login() {
             </div>
             {isOtpSent && (
               <div className="space-y-2">
-                <Label htmlFor="otp" className="text-foreground font-medium">OTP</Label>
+                <Label htmlFor="otp" className="text-foreground font-medium">
+                  OTP
+                </Label>
                 <Input
                   id="otp"
                   type="text"
                   placeholder="Enter OTP"
                   value={formData.otp}
-                  onChange={(e) => setFormData({ ...formData, otp: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, otp: e.target.value })
+                  }
                   required
                   className="focus-visible:ring-primary transition-colors"
                 />
@@ -220,8 +242,8 @@ export default function Login() {
             )}
           </CardContent>
           <CardFooter className="flex flex-col space-y-4 p-6 pt-0 relative z-10">
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 cursor-pointer"
               disabled={isLoading || (isOtpSent ? false : !!rollNumberError)}
             >
@@ -230,8 +252,10 @@ export default function Login() {
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   {isOtpSent ? "Verifying..." : "Sending OTP..."}
                 </>
+              ) : isOtpSent ? (
+                "Login"
               ) : (
-                isOtpSent ? "Login" : "Send OTP"
+                "Send OTP"
               )}
             </Button>
             {isOtpSent && (
@@ -249,7 +273,10 @@ export default function Login() {
             )}
             <div className="text-center text-sm text-muted-foreground">
               Cannot Login ?{" "}
-              <a href="#" className="text-primary hover:text-primary/90 transition-colors font-medium">
+              <a
+                href="#"
+                className="text-primary hover:text-primary/90 transition-colors font-medium"
+              >
                 Contact Admin
               </a>
             </div>

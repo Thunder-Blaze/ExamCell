@@ -1,10 +1,10 @@
-"use client"
-import React from "react"
-import { FileText, Home, LogOut, Users, LayoutTemplate } from "lucide-react"
-import { useLocation, Link } from "react-router-dom"
+"use client";
+import React from "react";
+import { FileText, Home, LogOut, Users, LayoutTemplate } from "lucide-react";
+import { useLocation, Link } from "react-router-dom";
 // import { useTheme } from "./theme-provider"
 
-import { Button } from "./ui/button"
+import { Button } from "./ui/button";
 import {
   Sidebar,
   SidebarContent,
@@ -20,12 +20,12 @@ import {
   SidebarProvider,
   SidebarRail,
   SidebarTrigger,
-} from "./ui/sidebar"
-import { ThemeToggle } from "./theme-toggle"
-import Footer from "./Footer"
+} from "./ui/sidebar";
+import { ThemeToggle } from "./theme-toggle";
+import Footer from "./Footer";
 
 export function DashboardLayout({ children }) {
-  const location = useLocation()
+  const location = useLocation();
   // const { theme } = useTheme()
 
   const navItems = [
@@ -59,7 +59,7 @@ export function DashboardLayout({ children }) {
       url: "/generated-certificates",
       isActive: location.pathname === "/generated-certificates",
     },
-  ]
+  ];
 
   return (
     <SidebarProvider>
@@ -80,7 +80,11 @@ export function DashboardLayout({ children }) {
                 <SidebarMenu>
                   {navItems.map((item) => (
                     <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild isActive={item.isActive} tooltip={item.title}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={item.isActive}
+                        tooltip={item.title}
+                      >
                         <Link to={item.url}>
                           <item.icon className="h-4 w-4" />
                           <span>{item.title}</span>
@@ -114,7 +118,11 @@ export function DashboardLayout({ children }) {
             </div>
             <div className="flex items-center gap-4">
               <ThemeToggle />
-              <Button variant="ghost" size="icon" className="rounded-full bg-accent">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full bg-accent"
+              >
                 {/* <img src="/placeholder.svg?height=32&width=32" alt="Admin" className="h-8 w-8 rounded-full" /> */}
                 <span className="font-bold text-2xl -top-0.5 relative">A</span>
                 <span className="sr-only">Profile</span>
@@ -126,5 +134,5 @@ export function DashboardLayout({ children }) {
         </SidebarInset>
       </div>
     </SidebarProvider>
-  )
+  );
 }

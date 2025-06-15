@@ -1,10 +1,17 @@
-import React from "react"
-import { Check, Eye, X, Download } from "lucide-react"
+import React from "react";
+import { Check, Eye, X, Download } from "lucide-react";
 
-import { Badge } from "./ui/badge"
-import { Button } from "./ui/button"
-import { Card } from "./ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
+import { Card } from "./ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
 
 const certificateRequests = [
   {
@@ -35,7 +42,7 @@ const certificateRequests = [
     dateRequested: "2023-04-12",
     status: "Approved",
   },
-]
+];
 
 export function CertificateRequestsTable() {
   return (
@@ -48,10 +55,14 @@ export function CertificateRequestsTable() {
               <TableRow>
                 <TableHead className="text-[#ffe2f3]">Roll No</TableHead>
                 <TableHead className="text-[#ffe2f3]">Name</TableHead>
-                <TableHead className="text-[#ffe2f3]">Certificate Type</TableHead>
+                <TableHead className="text-[#ffe2f3]">
+                  Certificate Type
+                </TableHead>
                 <TableHead className="text-[#ffe2f3]">Date Requested</TableHead>
                 <TableHead className="text-[#ffe2f3]">Status</TableHead>
-                <TableHead className="text-right text-[#ffe2f3]">Action</TableHead>
+                <TableHead className="text-right text-[#ffe2f3]">
+                  Action
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -97,17 +108,29 @@ export function CertificateRequestsTable() {
                     <div className="flex justify-end gap-2">
                       {request.status === "Pending" ? (
                         <>
-                          <Button size="icon" variant="outline" className="h-8 w-8 cursor-pointer">
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            className="h-8 w-8 cursor-pointer"
+                          >
                             <Check className="h-4 w-4 text-green-500" />
                             <span className="sr-only">Approve</span>
                           </Button>
-                          <Button size="icon" variant="outline" className="h-8 w-8 cursor-pointer">
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            className="h-8 w-8 cursor-pointer"
+                          >
                             <X className="h-4 w-4 text-red-500" />
                             <span className="sr-only">Reject</span>
                           </Button>
                         </>
                       ) : (
-                        <Button size="icon" variant="outline" className="h-8 w-8 cursor-pointer">
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="h-8 w-8 cursor-pointer"
+                        >
                           <Eye className="h-4 w-4" />
                           <span className="sr-only">View</span>
                         </Button>
@@ -121,5 +144,5 @@ export function CertificateRequestsTable() {
         </div>
       </div>
     </Card>
-  )
+  );
 }
