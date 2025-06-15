@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Eye, UserX } from "lucide-react";
 
 import { Badge } from "./ui/badge";
@@ -12,41 +12,32 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-
-const users = [
-  {
-    name: "Alice Johnson",
-    role: "Student",
-    department: "Computer Science",
-    status: "Active",
-  },
-  {
-    name: "Bob Smith",
-    role: "Faculty",
-    department: "Engineering",
-    status: "Active",
-  },
-  {
-    name: "Charlie Brown",
-    role: "Student",
-    department: "Business",
-    status: "Inactive",
-  },
-  {
-    name: "Diana Prince",
-    role: "Faculty",
-    department: "Arts",
-    status: "Active",
-  },
-  {
-    name: "Edward Norton",
-    role: "Student",
-    department: "Medicine",
-    status: "Active",
-  },
-];
+import toast from "react-hot-toast";
 
 export function UserManagementTable() {
+  let [users, setUsers] = useState(null);
+
+  const fetchUsers = async () => {
+    try {
+      let resp = await fetch("http://localhost:8080/api/students");
+      if (resp.ok) {
+        const data = await resp.json();
+        setUsers(data);
+        toast.success("Students Fetched Sucessfully");
+        return;
+      } else {
+        toast.error("Failed to Fetch Students");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to Fetch Students");
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   return (
     <Card className="border-primary/20">
       <div className="p-6">
@@ -55,35 +46,28 @@ export function UserManagementTable() {
           <Table>
             <TableHeader className="bg-primary">
               <TableRow>
-                <TableHead className="text-[#ffe2f3]">User Name</TableHead>
-                <TableHead className="text-[#ffe2f3]">Role</TableHead>
-                <TableHead className="text-[#ffe2f3]">Department</TableHead>
-                <TableHead className="text-[#ffe2f3]">Status</TableHead>
-                <TableHead className="text-right text-[#ffe2f3]">
+                <TableHead className="text-[#ffe2f3] font-bold tracking-wide">
+                  RollNo
+                </TableHead>
+                <TableHead className="text-[#ffe2f3] font-bold tracking-wide">
+                  Name
+                </TableHead>
+                <TableHead className="text-[#ffe2f3] font-bold tracking-wide">
+                  Program
+                </TableHead>
+                <TableHead className="text-right text-[#ffe2f3] font-bold tracking-wide">
                   Action
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.map((user) => (
-                <TableRow key={user.name}>
-                  <TableCell className="font-medium">{user.name}</TableCell>
-                  <TableCell>{user.role}</TableCell>
-                  <TableCell>{user.department}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={
-                        user.status === "Active" ? "outline" : "secondary"
-                      }
-                      className={
-                        user.status === "Active"
-                          ? "bg-pink-100 text-primary border-0"
-                          : "bg-gray-200 text-gray-700 border-0"
-                      }
-                    >
-                      {user.status}
-                    </Badge>
+              {users?.map((user) => (
+                <TableRow key={user.rollNumber}>
+                  <TableCell className="font-medium">
+                    {user.rollNumber}
                   </TableCell>
+                  <TableCell>{user.fullName}</TableCell>
+                  <TableCell>{`${user.program} (${user.course})`}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button size="icon" variant="outline" className="h-8 w-8">

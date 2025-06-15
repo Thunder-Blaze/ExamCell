@@ -23,6 +23,7 @@ public class SecurityConfig {
                     "/api/students/**",
                     "/api/admin/login",
                     "/api/admin/**",
+                    "/api/bonafide/sign",
                     "/api/bonafide/**", 
                     "/api/start-whatsapp-chat",
                     "/api/update-whatsapp",

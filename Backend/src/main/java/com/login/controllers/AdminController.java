@@ -59,7 +59,7 @@ public class AdminController {
     }
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> loginWithOtp(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> loginWithOtpAndPassword(@RequestBody LoginRequest request) {
         JwtResponse response = userService.authenticateAdminWithOtpAndPassword(request.getEmail(), request.getPassword(), request.getOtp());
         
         return ResponseEntity.ok()

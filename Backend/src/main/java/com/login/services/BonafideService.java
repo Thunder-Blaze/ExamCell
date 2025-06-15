@@ -133,4 +133,16 @@ public class BonafideService {
             })
             .collect(Collectors.toList());
     }
+
+    public List<BonafideCertificate> getAllCertificates() {
+        List<BonafideCertificate> certificates = certificateRepository.findAll();
+        
+        if (certificates.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No certificates found");
+        }
+        
+        return certificates.stream()
+            .sorted(Comparator.comparing(BonafideCertificate::getGeneratedAt).reversed())
+            .collect(Collectors.toList());
+    }
 } 

@@ -130,7 +130,7 @@ export function DashboardLayout({ children }) {
             </div>
           </header>
           <main className="flex-1 overflow-auto p-6">{children}</main>
-          <Footer />
+          {/* <Footer /> */}
         </SidebarInset>
       </div>
     </SidebarProvider>

@@ -93,7 +93,7 @@ export default function Login() {
       if (data.token) {
         sessionStorage.setItem("token", data.token);
         if (data.email) {
-          sessionStorage.setItem("email", JSON.stringify(data.email));
+          sessionStorage.setItem("email", data.email);
         }
         navigate("/dashboard", { replace: true });
       } else {
