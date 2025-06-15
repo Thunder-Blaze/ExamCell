@@ -2,7 +2,7 @@ package com.login.controllers;
 
 import com.login.dto.BonafideRequest;
 import com.login.dto.BonafideResponse;
-import com.login.service.BonafideService;
+import com.login.services.BonafideService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;

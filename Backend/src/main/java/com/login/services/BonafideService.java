@@ -1,4 +1,4 @@
-package com.login.service;
+package com.login.services;
 
 import com.login.dto.BonafideResponse;
 import com.login.entity.BonafideCertificate;

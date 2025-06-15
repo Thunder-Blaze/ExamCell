@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
 import { Navigate } from 'react-router-dom'
 
-const ProtectedRoute = ({ setIsLoading, children }) => {
+const ProtectedRoute = ({ children }) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [hasDetails, setHasDetails] = useState(false);
 
@@ -37,7 +38,7 @@ const ProtectedRoute = ({ setIsLoading, children }) => {
     sessionStorage.setItem("token", "");
     sessionStorage.setItem("email", "");
     setIsAuthenticated(false);
-    toast.error("Invalid Visit")
+    toast.error("Not Authorized")
     setIsLoading(false);
   }
 
@@ -72,7 +73,7 @@ const ProtectedRoute = ({ setIsLoading, children }) => {
     validateToken()
   }, [])
   
-  return (
+  return !isLoading && (
     isAuthenticated ? (
       hasDetails ? children : <Navigate to="/inputform" replace />
     ) : (

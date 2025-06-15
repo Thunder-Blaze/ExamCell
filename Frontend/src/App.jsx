@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./components/theme-provider";
 import Login from "./pages/Login";
@@ -13,58 +13,62 @@ import InputForm from "./pages/InputForm";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import { Toaster } from 'react-hot-toast'
 import AdminRoute from "./pages/AdminRoute";
+import AdminLogin from "./pages/AdminLogin";
+import Logout from "./pages/Logout";
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
 
   return (
     <ThemeProvider defaultTheme="system" storageKey="exam-cell-theme">
       <Toaster reverseOrder={false} position="top-right" />
       <BrowserRouter>
-        { !isLoading &&
+        {
           (
             <Routes>
               <Route path="/" element={<Login />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/admin" element={<AdminLogin />} />
               <Route path="/dashboard" element={
-                <ProtectedRoute setIsLoading={setIsLoading}>
+                <ProtectedRoute>
                   <Dashboard />
                 </ProtectedRoute>
               } />
               <Route path="/admin-dashboard" element={
-                <AdminRoute setIsLoading={setIsLoading}>
+                <AdminRoute>
                   <AdminDashboard />
                 </AdminRoute>
               } />
               <Route path="/manage-users" element={
-                <AdminRoute setIsLoading={setIsLoading}>
+                <AdminRoute>
                   <ManageUsersPage />
                 </AdminRoute>
               } />
               <Route path="/certificate-requests" element={
-                <AdminRoute setIsLoading={setIsLoading}>
+                <AdminRoute>
                   <CertificateRequestsPage />
                 </AdminRoute>
               } />
               <Route path="/templates" element={
-                <AdminRoute setIsLoading={setIsLoading}>
+                <AdminRoute>
                   <TemplatesPage />
                 </AdminRoute>
               } />
               <Route path="/generated-certificates" element={
-                <AdminRoute setIsLoading={setIsLoading}>
+                <AdminRoute>
                   <GeneratedCertificatesPage />
                 </AdminRoute>
               } />
               <Route path="/history" element={
-                <AdminRoute setIsLoading={setIsLoading}>
+                <AdminRoute>
                   <History />
                 </AdminRoute>
               } />
               <Route path="/inputform" element={
-                <ProtectedRoute setIsLoading={setIsLoading}>
+                <ProtectedRoute>
                   <InputForm />
                 </ProtectedRoute>
               } />
+              <Route path="/logout" element={<Logout />} />
             </Routes>
           )
         }

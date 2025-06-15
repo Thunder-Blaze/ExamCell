@@ -20,8 +20,10 @@ public class SecurityConfig {
                     "/api/request-otp", 
                     "/api/login", 
                     "/api/students",
-                    "/api/bonafide/**", 
                     "/api/students/**",
+                    "/api/admin/login",
+                    "/api/admin/**",
+                    "/api/bonafide/**", 
                     "/api/start-whatsapp-chat",
                     "/api/update-whatsapp",
                     "/api/verify-whatsapp"

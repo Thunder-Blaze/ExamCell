@@ -96,7 +96,7 @@ export function DashboardLayout({ children }) {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Logout">
-                  <Link to="/">
+                  <Link to="/logout">
                     <LogOut className="h-4 w-4" />
                     <span>Logout</span>
                   </Link>

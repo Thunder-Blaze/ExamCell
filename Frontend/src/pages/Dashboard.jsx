@@ -9,6 +9,7 @@ import { Hourglass, Download } from "lucide-react";
 import Footer from "../components/Footer";
 import { Button } from "../components/ui/button";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const columns = [
   { key: "request", label: "Requested On", width: "w-2/6" },
@@ -23,6 +24,7 @@ const ExamPage = () => {
   const [isRequestLimitReached, setIsRequestLimitReached] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
+  const navigate = useNavigate();
 
   const fetchUserRequests = async (rollno) => {
     if (!rollno) {
@@ -99,7 +101,8 @@ const ExamPage = () => {
   }
 
   const requestCertificate = async () => {
-    try {
+    if (!isRequestLimitReached) {
+      try {
       const resp = await fetch('http://localhost:8080/api/bonafide/generate', {
         method: 'POST',
         headers: {
@@ -124,6 +127,9 @@ const ExamPage = () => {
       console.log(err);
       toast.error(err.message || "Failed to request certificate. Please try again.");
     }
+    } else {
+      toast.error("Request Limit Reached")
+    }
   }
 
   return (
@@ -145,15 +151,23 @@ const ExamPage = () => {
 
       {/* Table */}
       <main className="flex flex-col px-4 py-10 max-w-7xl mx-auto w-full gap-5">
-        <div className="max-w-7xl mx-auto w-full flex gap-3 px-4 mt-3 justify-between">
+        <div className="max-w-7xl mx-auto w-full flex flex-wrap gap-3 px-4 mt-3 justify-between">
           <h1 className="pt-3 font-bold text-2xl">Welcome, {user?.fullName || "User"}</h1>
-          <Button 
-            className="cursor-pointer"
-            onClick={requestCertificate}
-            disabled={isLoading || isRequestLimitReached}
-          >
-            Request Certificate
-          </Button>
+          <div className="flex flex-row gap-4">
+            <Button 
+              className="cursor-pointer"
+              onClick={requestCertificate}
+              disabled={isLoading || isRequestLimitReached}
+            >
+              Request Certificate
+            </Button>
+            <Button 
+              className="cursor-pointer"
+              onClick={()=>{navigate("/inputform", true)}}
+            >
+              Update Details
+            </Button>
+          </div>
         </div>
         {!isLoading && (<div className="rounded-2xl border shadow bg-card p-4">
           {/* Header Row */}
