@@ -88,7 +88,7 @@ export default function Login() {
         if (data.email) {
           sessionStorage.setItem('email', JSON.stringify(data.email));
         }
-        navigate('/');
+        navigate('/dashboard', { replace: true });
       } else {
         throw new Error('No token received');
       }

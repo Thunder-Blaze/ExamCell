@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label"
 import Footer from "../components/Footer"
 import { LucideInfo } from "lucide-react"
 import toast from "react-hot-toast"
-import { useNavigate } from "react-router-dom"
+// import { useNavigate } from "react-router-dom"
 
 const programCourses = {
   "B.Tech": ["IT", "CS", "CSB", "CSAI"],
@@ -32,10 +32,10 @@ const semesterMap = {
 }
 
 const InputForm = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
-  let studentData = JSON.parse(localStorage.getItem("studentData"))  || null;
+  let studentData = JSON.parse(localStorage.getItem("studentData"));
   let hasDetails = !!studentData;
 
   const [formData, setFormData] = useState(
@@ -83,7 +83,7 @@ const InputForm = () => {
       const data = await response.json();
       toast.success("Details Submitted Sucessfully")
       console.log("Form submitted:", data)
-      navigate("/dashboard")
+      window.location.href = "/dashboard";
     } catch (err) {
       toast.error("Failed to Submit Data")
       setError(err.message || 'Data Submission failed. Please try again.');
