@@ -34,6 +34,8 @@ export default function Login() {
         body: JSON.stringify({ email: formData.rollno+"@iiitl.ac.in" }),
       });
 
+      console.log(response)
+
       if (!response.ok) {
         throw new Error('Failed to send OTP');
       }
@@ -77,6 +79,8 @@ export default function Login() {
         throw new Error('Invalid OTP');
       }
 
+      console.log(response)
+
       const data = await response.json();
       
       if (data.token) {
@@ -84,7 +88,7 @@ export default function Login() {
         if (data.email) {
           sessionStorage.setItem('email', JSON.stringify(data.email));
         }
-        navigate('/dashboard');
+        navigate('/inputform');
       } else {
         throw new Error('No token received');
       }
@@ -153,7 +157,7 @@ export default function Login() {
                 }}
                 required
                 disabled={isOtpSent}
-                className={`${rollNumberError ? "border-destructive focus-visible:ring-destructive" : "focus-visible:ring-primary"} transition-colors`}
+                className={`${rollNumberError ? "border-destructive focus-visible:ring-destructive" : "focus-visible:ring-primary"} transition-colors outline-0 border-0`}
               />
               {rollNumberError && (
                 <p className="text-sm text-destructive flex items-center gap-1">
@@ -214,10 +218,6 @@ export default function Login() {
               type="submit" 
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20 cursor-pointer"
               disabled={isLoading || (isOtpSent ? false : !!rollNumberError)}
-              style={{
-                backgroundColor: "var(--foreground)",
-                color: "var(--primary-foreground)",
-              }}
             >
               {isLoading ? (
                 <>

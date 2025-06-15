@@ -41,12 +41,12 @@ const templates = [
 
 export function TemplatesTable() {
   return (
-    <Card className="border-[#4a2639]/20">
+    <Card className="border-primary/20">
       <div className="p-6">
         <h3 className="text-xl font-semibold mb-4">Certificate Templates</h3>
         <div className="rounded-md border">
           <Table>
-            <TableHeader className="bg-[#4a2639]">
+            <TableHeader className="bg-primary">
               <TableRow>
                 <TableHead className="text-[#ffe2f3]">Template Name</TableHead>
                 <TableHead className="text-[#ffe2f3]">Type</TableHead>
@@ -60,7 +60,7 @@ export function TemplatesTable() {
                 <TableRow key={template.name}>
                   <TableCell className="font-medium">{template.name}</TableCell>
                   <TableCell>
-                    <Badge variant="outline" className="bg-pink-100 text-[#4a2639] border-0">
+                    <Badge variant="outline" className="bg-pink-100 text-primary border-0">
                       {template.type}
                     </Badge>
                   </TableCell>

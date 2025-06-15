@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./components/theme-provider";
 import Login from "./pages/Login";
@@ -10,22 +10,64 @@ import TemplatesPage from "./pages/TemplatesPage"
 import GeneratedCertificatesPage from "./pages/GeneratedCertificatesPage"
 import History from "./pages/History";
 import InputForm from "./pages/InputForm";
+import ProtectedRoute from "./pages/ProtectedRoute";
+import { Toaster } from 'react-hot-toast'
+import AdminRoute from "./pages/AdminRoute";
 
 const App = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
   return (
     <ThemeProvider defaultTheme="system" storageKey="exam-cell-theme">
+      <Toaster reverseOrder={false} position="top-right" />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          <Route path="/manage-users" element={<ManageUsersPage />} />
-          <Route path="/certificate-requests" element={<CertificateRequestsPage />} />
-          <Route path="/templates" element={<TemplatesPage />} />
-          <Route path="/generated-certificates" element={<GeneratedCertificatesPage />} />
-          <Route path="/History" element={<History/>} />
-          <Route path="/inputform" element={<InputForm />} />
-        </Routes>
+        { !isLoading &&
+          (
+            <Routes>
+              <Route path="/" element={<Login />} />
+              <Route path="/dashboard" element={
+                <ProtectedRoute setIsLoading={setIsLoading}>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin-dashboard" element={
+                <AdminRoute setIsLoading={setIsLoading}>
+                  <AdminDashboard />
+                </AdminRoute>
+              } />
+              <Route path="/manage-users" element={
+                <AdminRoute setIsLoading={setIsLoading}>
+                  <ManageUsersPage />
+                </AdminRoute>
+              } />
+              <Route path="/certificate-requests" element={
+                <AdminRoute setIsLoading={setIsLoading}>
+                  <CertificateRequestsPage />
+                </AdminRoute>
+              } />
+              <Route path="/templates" element={
+                <AdminRoute setIsLoading={setIsLoading}>
+                  <TemplatesPage />
+                </AdminRoute>
+              } />
+              <Route path="/generated-certificates" element={
+                <AdminRoute setIsLoading={setIsLoading}>
+                  <GeneratedCertificatesPage />
+                </AdminRoute>
+              } />
+              <Route path="/history" element={
+                <AdminRoute setIsLoading={setIsLoading}>
+                  <History />
+                </AdminRoute>
+              } />
+              <Route path="/inputform" element={
+                <ProtectedRoute setIsLoading={setIsLoading}>
+                  <InputForm />
+                </ProtectedRoute>
+              } />
+            </Routes>
+          )
+        }
       </BrowserRouter>
     </ThemeProvider>
   );

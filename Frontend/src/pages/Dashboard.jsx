@@ -1,41 +1,85 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
   Input
 } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Hourglass, Download } from "lucide-react";
-
-
-const dummyData = [
-  { rollno: "CS101", name: "John Doe", status: "completed", type: "Bonafied Certificate" },
-  { rollno: "CS102", name: "Jane Smith", status: "Not Completed", type: "Scholarship" },
-  { rollno: "CS103", name: "Mike Johnson", status: "completed", type: "Bonafied Certificate" },
-  { rollno: "CS104", name: "Sarah Williams", status: "completed", type: "Scholarship" },
-]
+import Footer from "../components/Footer";
+import { Button } from "../components/ui/button";
+import toast from "react-hot-toast";
 
 const columns = [
-  { key: "rollno", label: "Roll No", width: "w-1/6" },
-  { key: "name", label: "Name", width: "w-2/6" },
-  { key: "status", label: "Status", width: "w-1/6" },
-  { key: "type", label: "Type", width: "w-2/6" },
+  { key: "request", label: "Requested On", width: "w-2/6" },
+  { key: "expire", label: "Expires By", width: "w-2/6" },
+  { key: "download", label: "Download", width: "w-1/6" },
+  { key: "sign", label: "Signed", width: "w-1/6" },
 ]
 
 const ExamPage = () => {
-  const [searchTerm, setSearchTerm] = useState("")
+  const [userRequests, setUserRequests] = useState([]);
+  const [user, setUser] = useState(null);
+  const [isRequestLimitReached, setIsRequestLimitReached] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  const fetchUserRequests = async (rollno) => {
+    if (!rollno) {
+      return
+    }
+    setIsLoading(true);
+    setError("");
+    try {
+      const resp = await fetch(`http://localhost:8080/api/bonafide/uid/${rollno}`);
+      if (!resp.ok) {
+        setIsRequestLimitReached(false);
+        throw new Error('No Requests Found');
+      }
+      const data = (await resp.json()).certificates;
+      // console.log(data);
+      if (data.length >= 5 && (new Date(data[4].generatedAt)).toLocaleDateString() === (new Date()).toLocaleDateString()) {
+        setIsRequestLimitReached(true);
+      } else {
+        setIsRequestLimitReached(false);
+      }
+      setUserRequests(data.map((req) => {
+        let reqDt = new Date(req.generatedAt);
+        reqDt = `${reqDt.toLocaleDateString()} - ${reqDt.toTimeString().slice(0,8)}`
+        let expDt  = new Date(req.expiresAt);
+        expDt = `${expDt.toLocaleDateString()} - ${expDt.toTimeString().slice(0,8)}`
+        return {
+          request: reqDt,
+          expire: expDt,
+          download: "http://localhost:8080/api/bonafide/download/" + req.uid,
+          sign: req.isSigned,
+        }
+      }));
+      toast.success("Requests fetched successfully");
+    } catch (err) {
+      setError(err.message);
+      toast.error(err.message);
+      // console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("studentData"));
+    // console.log(userData);
+    setUser(userData);
+    if (userData.rollNumber) {
+      fetchUserRequests(userData.rollNumber);
+    }
+  }, [])
+
   const [sortConfig, setSortConfig] = useState({
     key: null,
     direction: "ascending",
   })
 
-  const filteredData = dummyData.filter((student) =>
-    Object.values(student).some((value) =>
-      value.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  )
-
-  const sortedData = [...filteredData].sort((a, b) => {
+  const sortedData = [...userRequests].sort((a, b) => {
     if (!sortConfig.key) return 0
     if (a[sortConfig.key] < b[sortConfig.key]) {
       return sortConfig.direction === "ascending" ? -1 : 1
@@ -54,35 +98,66 @@ const ExamPage = () => {
     setSortConfig({ key, direction })
   }
 
+  const requestCertificate = async () => {
+    try {
+      const resp = await fetch('http://localhost:8080/api/bonafide/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "studentName": user.fullName,
+          "email": user.email.toUpperCase(),
+          "course": user.course==="IT" ? "Information Technology" : user.course==="CS" ? "Computer Science" : user.course==="CSAI" ? "Computer Science with Artificial Intelligence" : user.course==="CSB" ? "Computer Science and Business" : user.course,
+          "semester": user.semester + (user.semester==1 ? "st" : user.semester==2 ? "nd" : user.semester==3 ? "rd" : "th"),
+          "purpose": user.purpose
+        }),
+      });
+      if (!resp.ok) {
+        throw new Error('Failed to request certificate');
+      }
+      const data = await resp.json();
+      toast.success("Certificate Request Submitted sucessfully")
+      fetchUserRequests(user.rollNumber);
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+      toast.error(err.message || "Failed to request certificate. Please try again.");
+    }
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       {/* Header */}
-      <header className="bg-foreground text-primary-foreground py-12 px-4 shadow-md">
+      <header className="bg-secondary rounded-b-[2.5rem] text-foreground py-12 px-4 shadow-md">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
             🎓 Exam Cell
           </h1>
-          <p className="mt-4 text-sm md:text-lg text-secondary">
+          <p className="mt-4 text-sm md:text-lg text-primary">
             Manage and Monitor Examinations Efficiently
           </p>
         </div>
       </header>
 
       {/* Search */}
-      <div className="max-w-4xl mx-auto w-full px-4 mt-8">
-        <Input
-          placeholder="Search by any field..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="shadow"
-        />
-      </div>
+      
 
       {/* Table */}
-      <main className="flex-1 px-4 py-10 max-w-7xl mx-auto w-full">
-        <div className="rounded-2xl border shadow bg-card p-4">
+      <main className="flex flex-col px-4 py-10 max-w-7xl mx-auto w-full gap-5">
+        <div className="max-w-7xl mx-auto w-full flex gap-3 px-4 mt-3 justify-between">
+          <h1 className="pt-3 font-bold text-2xl">Welcome, {user?.fullName || "User"}</h1>
+          <Button 
+            className="cursor-pointer"
+            onClick={requestCertificate}
+            disabled={isLoading || isRequestLimitReached}
+          >
+            Request Certificate
+          </Button>
+        </div>
+        {!isLoading && (<div className="rounded-2xl border shadow bg-card p-4">
           {/* Header Row */}
-          <div className="grid grid-cols-[1fr_2fr_1fr_2fr] text-sm text-muted-foreground font-semibold border-b">
+          <div className="grid grid-cols-[2fr_2fr_1fr_1fr] text-sm text-muted-foreground font-semibold border-b">
             {columns.map((column, idx) => (
               <div
                 key={column.key}
@@ -101,69 +176,43 @@ const ExamPage = () => {
           {sortedData.map((student, idx) => (
             <div
               key={idx}
-              className="grid grid-cols-[1fr_2fr_1fr_2fr] text-sm border-b hover:bg-muted/70 transition-colors"
+              className="grid grid-cols-[2fr_2fr_1fr_1fr] text-sm border-b hover:bg-muted/70 transition-colors"
             >
-              <div className="px-4 py-3 font-medium">{student.rollno}</div>
-              <div className="px-4 py-3 border-l">{student.name}</div>
+              <div className="px-4 py-3 font-medium">{student.request}</div>
+              <div className="px-4 py-3 border-l">{student.expire}</div>
               <div className="px-4 py-3 border-l">
-                {student.status?.toLowerCase() === "completed" ? (
                   <a
-                    href={`#`}
+                    href={student.download}
                     // className="text-blue-600 underline hover:text-blue-900 transition-colors"
+                    target="_blank"
                   >
-<Badge variant="success" className="flex items-center gap-1">
-  <Download className="w-4 h-4" />
-  Download
-</Badge>
-</a>
-                ) : (
-<Badge variant="destructive" className="flex items-center gap-1">
-  <Hourglass className="w-4 h-4" />
-  Pending
-</Badge>
-                )}
+                  <Badge variant="success" className="flex items-center gap-1">
+                    <Download className="w-4 h-4" />
+                    Download
+                  </Badge>
+                  </a>
               </div>
               <div className="px-4 py-3 border-l">
-                <Badge variant="secondary">{student.type}</Badge>
+                {student.sign ? (
+                  <Badge variant="secondary">Signed</Badge>
+                ) : (
+                  <Badge variant="destructive">Not Signed</Badge>
+                )}
               </div>
             </div>
           ))}
-        </div>
+        </div>)}
+
+        {error && (
+          <>
+            <div className="text-red-500">Error Fetching User Requests</div>
+            <p className="text-sm">{error}</p>
+          </>
+        )}
       </main>
 
       {/* Footer */}
-      <footer className="bg-foreground text-primary-foreground py-10 mt-12 rounded-t-[2.5rem] shadow-inner">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 px-4">
-          <div>
-            <h3 className="text-lg font-semibold mb-3">Quick Links</h3>
-            <ul className="space-y-1 text-secondary">
-              <li className="hover:underline cursor-pointer">Dashboard</li>
-              <li className="hover:underline cursor-pointer">Exam Schedule</li>
-              <li className="hover:underline cursor-pointer">Results</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-3">Contact</h3>
-            <ul className="space-y-1 text-secondary">
-              <li>📧 exam@university.edu</li>
-              <li>📱 (123) 456-7890</li>
-              <li>📍 Main Campus</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-3">Resources</h3>
-            <ul className="space-y-1 text-secondary">
-              <li className="hover:underline cursor-pointer">Help Center</li>
-              <li className="hover:underline cursor-pointer">FAQs</li>
-              <li className="hover:underline cursor-pointer">Support</li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="text-center mt-6 text-xs text-secondary border-t pt-4">
-          © {new Date().getFullYear()} Exam Cell. All rights reserved.
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

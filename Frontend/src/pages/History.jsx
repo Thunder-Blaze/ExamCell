@@ -4,6 +4,7 @@ import React from "react"
 import { Badge } from "@/components/ui/badge"
 import { Clock, UserRound, AlignLeft, Hash, Info } from "lucide-react"
 import { cn } from "@/lib/utils"
+import Footer from "../components/Footer"
 
 const dummyLogs = [
   {
@@ -69,12 +70,12 @@ const History = () => {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       {/* Header */}
-      <header className="bg-foreground text-primary-foreground py-12 px-4 shadow-md">
+      <header className="bg-secondary rounded-b-[2.5rem] text-foreground py-12 px-4 shadow-md">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
             🕘 History Logs
           </h1>
-          <p className="mt-4 text-sm md:text-lg text-secondary">
+          <p className="mt-4 text-sm md:text-lg text-muted-background">
             Admin view of certificate request logs
           </p>
         </div>
@@ -140,37 +141,7 @@ const History = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-foreground text-primary-foreground py-10 mt-12 rounded-t-[2.5rem] shadow-inner">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 px-4">
-          <div>
-            <h3 className="text-lg font-semibold mb-3">Quick Links</h3>
-            <ul className="space-y-1 text-secondary">
-              <li className="hover:underline cursor-pointer">Dashboard</li>
-              <li className="hover:underline cursor-pointer">Exam Schedule</li>
-              <li className="hover:underline cursor-pointer">Results</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-3">Contact</h3>
-            <ul className="space-y-1 text-secondary">
-              <li>📧 exam@university.edu</li>
-              <li>📱 (123) 456-7890</li>
-              <li>📍 Main Campus</li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-3">Resources</h3>
-            <ul className="space-y-1 text-secondary">
-              <li className="hover:underline cursor-pointer">Help Center</li>
-              <li className="hover:underline cursor-pointer">FAQs</li>
-              <li className="hover:underline cursor-pointer">Support</li>
-            </ul>
-          </div>
-        </div>
-        <div className="text-center mt-6 text-xs text-secondary border-t pt-4">
-          © {new Date().getFullYear()} Exam Cell. All rights reserved.
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

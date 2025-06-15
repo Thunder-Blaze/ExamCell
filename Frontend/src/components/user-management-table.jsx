@@ -41,12 +41,12 @@ const users = [
 
 export function UserManagementTable() {
   return (
-    <Card className="border-[#4a2639]/20">
+    <Card className="border-primary/20">
       <div className="p-6">
         <h3 className="text-xl font-semibold mb-4">User Management</h3>
         <div className="rounded-md border">
           <Table>
-            <TableHeader className="bg-[#4a2639]">
+            <TableHeader className="bg-primary">
               <TableRow>
                 <TableHead className="text-[#ffe2f3]">User Name</TableHead>
                 <TableHead className="text-[#ffe2f3]">Role</TableHead>
@@ -66,7 +66,7 @@ export function UserManagementTable() {
                       variant={user.status === "Active" ? "outline" : "secondary"}
                       className={
                         user.status === "Active"
-                          ? "bg-pink-100 text-[#4a2639] border-0"
+                          ? "bg-pink-100 text-primary border-0"
                           : "bg-gray-200 text-gray-700 border-0"
                       }
                     >

@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
-import java.io.IOException;
+// import java.io.IOException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.HashMap;
@@ -66,9 +66,9 @@ public class BonafideController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/approve/{uid}")
-    public ResponseEntity<?> approveCertificate(@PathVariable UUID uid) {
-        bonafideService.approveCertificate(uid);
+    @PostMapping("/sign/{uid}")
+    public ResponseEntity<?> signCertificate(@PathVariable UUID uid) {
+        bonafideService.signCertificate(uid);
         return ResponseEntity.ok().build();
     }
 

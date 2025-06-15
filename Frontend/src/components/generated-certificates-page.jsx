@@ -20,7 +20,7 @@ const generatedCertificates = [
     studentName: "Jane Smith",
     certificateType: "Scholarship",
     dateGenerated: "2023-04-14",
-    generatedBy: "Dr. Johnson",
+    generatedBy: "Admin",
   },
   {
     id: "CS103",
@@ -47,7 +47,7 @@ export function GeneratedCertificatesPage() {
             <h2 className="text-3xl font-bold tracking-tight">Generated Certificates</h2>
             <p className="text-muted-foreground">View and download generated certificates</p>
           </div>
-          <Button className="bg-[#4a2639] hover:bg-[#4a2639]/90 text-white">
+          <Button className="bg-primary hover:bg-primary/90 text-white">
             <Download className="mr-2 h-4 w-4" />
             Export All
           </Button>
@@ -61,11 +61,11 @@ export function GeneratedCertificatesPage() {
           <Button variant="outline">Filter</Button>
         </div>
 
-        <Card className="border-[#4a2639]/20">
+        <Card className="border-primary/20">
           <div className="p-6">
             <div className="rounded-md border">
               <Table>
-                <TableHeader className="bg-[#4a2639]">
+                <TableHeader className="bg-primary">
                   <TableRow>
                     <TableHead className="text-[#ffe2f3]">Roll No</TableHead>
                     <TableHead className="text-[#ffe2f3]">Name</TableHead>
@@ -81,7 +81,7 @@ export function GeneratedCertificatesPage() {
                       <TableCell className="font-medium">{certificate.id}</TableCell>
                       <TableCell>{certificate.studentName}</TableCell>
                       <TableCell>
-                        <Badge variant="outline" className="bg-pink-100 text-[#4a2639] border-0">
+                        <Badge variant="outline" className="bg-pink-100 text-primary border-0">
                           {certificate.certificateType}
                         </Badge>
                       </TableCell>

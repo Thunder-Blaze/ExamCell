@@ -10,21 +10,21 @@ export function AdminDashboard() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <h2 className="text-3xl font-bold tracking-tight">Welcome back, Dr. Johnson</h2>
+        <h2 className="text-3xl font-bold tracking-tight">Welcome back, Admin</h2>
         <p className="text-muted-foreground">Here's an overview of your certificate generation system</p>
       </div>
 
       <StatsCards />
 
       <Tabs defaultValue="requests" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 md:w-auto bg-[#4a2639]/10">
-          <TabsTrigger value="requests" className="data-[state=active]:bg-[#4a2639] data-[state=active]:text-white">
+        <TabsList className="grid w-full grid-cols-3 md:w-auto bg-primary/10">
+          <TabsTrigger value="requests" className="data-[state=active]:bg-primary data-[state=active]:text-white">
             Certificate Requests
           </TabsTrigger>
-          <TabsTrigger value="templates" className="data-[state=active]:bg-[#4a2639] data-[state=active]:text-white">
+          <TabsTrigger value="templates" className="data-[state=active]:bg-primary data-[state=active]:text-white">
             Templates
           </TabsTrigger>
-          <TabsTrigger value="users" className="data-[state=active]:bg-[#4a2639] data-[state=active]:text-white">
+          <TabsTrigger value="users" className="data-[state=active]:bg-primary data-[state=active]:text-white">
             User Management
           </TabsTrigger>
         </TabsList>

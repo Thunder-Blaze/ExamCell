@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 const logs = [
   {
     action: "Certificate Approved",
-    user: "Dr. Johnson",
+    user: "Admin",
     timestamp: "Today, 10:30 AM",
   },
   {
@@ -22,7 +22,7 @@ const logs = [
   },
   {
     action: "Certificate Request Rejected",
-    user: "Dr. Johnson",
+    user: "Admin",
     timestamp: "Yesterday, 02:30 PM",
   },
   {
@@ -34,7 +34,7 @@ const logs = [
 
 export function LogsSection() {
   return (
-    <Card className="border-[#4a2639]/20">
+    <Card className="border-primary/20">
       <CardHeader>
         <CardTitle>System Logs</CardTitle>
         <CardDescription>Recent activities in the system</CardDescription>
@@ -53,7 +53,7 @@ export function LogsSection() {
         </div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full bg-[#4a2639] hover:bg-[#4a2639]/90 text-white">
+        <Button className="w-full bg-primary hover:bg-primary/90 text-white">
           <Download className="mr-2 h-4 w-4" />
           Export Logs
         </Button>

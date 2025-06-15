@@ -11,7 +11,7 @@ export function StatsCards() {
       description: "Registered in the system",
       icon: Users,
       iconColor: "text-[#ffe2f3]",
-      iconBg: "bg-[#4a2639]",
+      iconBg: "bg-primary",
     },
     {
       title: "Total Certificates",
@@ -19,7 +19,7 @@ export function StatsCards() {
       description: "Generated to date",
       icon: FileText,
       iconColor: "text-[#ffe2f3]",
-      iconBg: "bg-[#4a2639]",
+      iconBg: "bg-primary",
     },
     {
       title: "Pending Requests",
@@ -27,7 +27,7 @@ export function StatsCards() {
       description: "Awaiting approval",
       icon: BarChart3,
       iconColor: "text-[#ffe2f3]",
-      iconBg: "bg-[#4a2639]",
+      iconBg: "bg-primary",
     },
     {
       title: "Approved Today",
@@ -35,14 +35,14 @@ export function StatsCards() {
       description: "Certificates issued",
       icon: CheckCircle,
       iconColor: "text-[#ffe2f3]",
-      iconBg: "bg-[#4a2639]",
+      iconBg: "bg-primary",
     },
   ]
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat, index) => (
-        <Card key={index} className="border-[#4a2639]/20">
+        <Card key={index} className="border-primary/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
             <div className={`rounded-full p-2 ${stat.iconBg}`}>

@@ -39,12 +39,12 @@ const certificateRequests = [
 
 export function CertificateRequestsTable() {
   return (
-    <Card className="border-[#4a2639]/20">
+    <Card className="border-primary/20">
       <div className="p-6">
         <h3 className="text-xl font-semibold mb-4">Certificate Requests</h3>
         <div className="rounded-md border">
           <Table>
-            <TableHeader className="bg-[#4a2639]">
+            <TableHeader className="bg-primary">
               <TableRow>
                 <TableHead className="text-[#ffe2f3]">Roll No</TableHead>
                 <TableHead className="text-[#ffe2f3]">Name</TableHead>
@@ -64,8 +64,8 @@ export function CertificateRequestsTable() {
                       variant="outline"
                       className={
                         request.certificateType === "Bonafied Certificate"
-                          ? "bg-pink-100 text-[#4a2639] border-0"
-                          : "bg-pink-100 text-[#4a2639] border-0"
+                          ? "bg-pink-100 text-primary border-0"
+                          : "bg-pink-100 text-primary border-0"
                       }
                     >
                       {request.certificateType}
