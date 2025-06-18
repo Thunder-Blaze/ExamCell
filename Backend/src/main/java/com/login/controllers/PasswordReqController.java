@@ -1,7 +1,5 @@
 package com.login.controllers;
 
-import java.time.LocalDateTime;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +20,7 @@ import com.login.services.AdminService;
 import com.login.services.PasswordReqService;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @RestController
 @RequestMapping("/api/password-requests")
@@ -40,6 +39,16 @@ public class PasswordReqController {
     @Autowired
     private AdminService adminService;
 
+    @GetMapping
+    public ResponseEntity<?> getAllPasswordRequests() {
+        if (passwordReqRepository.count() == 0) {
+            return ResponseEntity.ok("No password requests found");
+        }
+        return ResponseEntity.ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(passwordReqRepository.findAll());
+    }
+
     @GetMapping("/{email}")
     public ResponseEntity<?> getPasswordRequest(@PathVariable String email) {
         if (email == null || email.isEmpty()) {
@@ -47,7 +56,7 @@ public class PasswordReqController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body("Email cannot be null or empty");
         }
-        PasswordRequest pq = passwordReqService.getRequestByEmail(email);
+        PasswordRequest pq = passwordReqRepository.findById(email).orElse(null);
         if (pq == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -60,7 +69,7 @@ public class PasswordReqController {
 
     @PostMapping("/delete")
     public ResponseEntity<?> deletePasswordRequest(@RequestBody PasswordRequestReq preq) {
-        Boolean response = jwtUtil.validateToken(preq.getToken(), preq.getEmail());
+        Boolean response = jwtUtil.validateToken(preq.getToken(), preq.getEmail()) || jwtUtil.validateToken(preq.getToken(), preq.getAdminMail());
         if (response) {
             passwordReqService.deleteRequest(preq.getEmail());
             return ResponseEntity.ok()
@@ -99,7 +108,6 @@ public class PasswordReqController {
                 // Accept the password request
                 Log log = new Log();
                 log.setUser("Admin");
-                log.setTimestamp(LocalDateTime.now());
                 log.setMessage("Accepted password request for email: " + preq.getEmail());
                 passwordReqRepository.deleteById(preq.getEmail());
                 return ResponseEntity.ok()
@@ -116,11 +124,12 @@ public class PasswordReqController {
     }
 
     @Data
-    public class PasswordRequestReq {
+    @NoArgsConstructor
+    public static class PasswordRequestReq {
         private String email;
         private String adminMail = null;
         private String token;
         private String reason = null;
-        private String password;
+        private String password = null;
     }
 }

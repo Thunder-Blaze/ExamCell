@@ -1,5 +1,10 @@
 package com.login.entity;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -16,6 +21,10 @@ public class PasswordRequest {
 
     @NotBlank(message = "Reason is required")
     private String reason;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime timestamp;
 
     @NotBlank(message = "New password is required")
     private String password;
