@@ -187,7 +187,9 @@ public class UserController {
                     .orElse(new WhatsAppOtp());
                 
                 // Update the record with new OTP
-                whatsAppOtp.setEmail(request.getEmail());
+                if (whatsAppOtp.getEmail() == "" || whatsAppOtp.getEmail() == null) {
+                    whatsAppOtp.setEmail(request.getEmail());
+                }
                 whatsAppOtp.setMobileNumber(student.getMobileNumber());
                 whatsAppOtp.setOtp(otp); // Using the same OTP
                 whatsAppOtp.setCreatedAt(LocalDateTime.now());
@@ -326,7 +328,9 @@ public class UserController {
                 .orElse(new WhatsAppOtp());
             
             // Update the record with new OTP and mobile number
-            whatsAppOtp.setEmail(request.getEmail());
+            if (whatsAppOtp.getEmail() == "" || whatsAppOtp.getEmail() == null) {
+                whatsAppOtp.setEmail(request.getEmail());
+            }
             whatsAppOtp.setMobileNumber(request.getMobileNumber());
             whatsAppOtp.setOtp(otp);
             whatsAppOtp.setCreatedAt(LocalDateTime.now());
