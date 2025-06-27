@@ -4,8 +4,10 @@ import com.login.entity.Admin;
 import com.login.repositories.AdminRepository;
 import com.login.repositories.StudentRepository;
 import com.login.repositories.PasswordReqRepository;
+import com.login.repositories.BonafideCertificateRepository;
 import com.login.entity.Student;
 import com.login.entity.AdminOtp;
+import com.login.entity.BonafideCertificate;
 import com.login.repositories.AdminOtpRepository;
 import com.login.models.JwtResponse;
 import com.login.models.JwtUtil;
@@ -35,6 +37,9 @@ public class AdminService {
 
     @Autowired
     private PasswordReqRepository passwordReqRepository;
+
+    @Autowired
+    private BonafideCertificateRepository bonafideCertificateRepository;
 
     @Autowired
     private EmailService emailService;
@@ -130,7 +135,21 @@ public class AdminService {
   
     @Transactional
     public void deleteStudentByRollNumber(String rollNumber) {
-        studentRepository.deleteByRollNumber(rollNumber);
+        // First, get the student to find their email
+        Student student = studentRepository.findByRollNumber(rollNumber);
+        if (student != null) {
+            // Delete all bonafide certificates for this student's email
+            String enrollmentNumber = student.getEmail().split("@")[0].toUpperCase();
+            List<BonafideCertificate> certificates = bonafideCertificateRepository.findAllByEnrollmentNumber(enrollmentNumber);
+            if (!certificates.isEmpty()) {
+                bonafideCertificateRepository.deleteAll(certificates);
+            }
+            
+            // Delete the student
+            studentRepository.deleteByRollNumber(rollNumber);
+        } else {
+            throw new RuntimeException("Student not found with roll number: " + rollNumber);
+        }
     }
 
     public String generateOtp(String email) {
