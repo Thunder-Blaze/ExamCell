@@ -82,7 +82,7 @@ public class AdminService {
         }
         return value;
     }
-
+  
     @Transactional
     public void deleteStudentByRollNumber(String rollNumber) {
         studentRepository.deleteByRollNumber(rollNumber);
