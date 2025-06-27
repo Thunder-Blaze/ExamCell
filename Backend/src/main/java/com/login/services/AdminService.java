@@ -3,12 +3,14 @@ package com.login.services;
 import com.login.entity.Admin;
 import com.login.repositories.AdminRepository;
 import com.login.repositories.StudentRepository;
+import com.login.repositories.PasswordReqRepository;
 import com.login.entity.Student;
 import com.login.entity.AdminOtp;
 import com.login.repositories.AdminOtpRepository;
 import com.login.models.JwtResponse;
 import com.login.models.JwtUtil;
 import com.login.services.WhatsAppService;
+import com.login.entity.PasswordRequest;
 
 import java.util.List;
 import java.io.ByteArrayOutputStream;
@@ -30,6 +32,9 @@ public class AdminService {
 
     @Autowired
     private StudentRepository studentRepository;
+
+    @Autowired
+    private PasswordReqRepository passwordReqRepository;
 
     @Autowired
     private EmailService emailService;
@@ -89,6 +94,24 @@ public class AdminService {
                 escapeCSV(student.getCourse()) + "," +
                 escapeCSV(student.getSemester()) + "," +
                 escapeCSV(student.getPurpose())
+            );
+        }
+        writer.flush();
+        return out.toByteArray();
+    }
+
+    public byte[] generatePasswordRequestsCSV() {
+        List<PasswordRequest> passwordRequests = passwordReqRepository.findAll(Sort.by("timestamp"));
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PrintWriter writer = new PrintWriter(out);
+        // Write CSV header
+        writer.println("Email,Reason,New Password");
+        // Write password request data
+        for (PasswordRequest request : passwordRequests) {
+            writer.println(
+                escapeCSV(request.getEmail()) + "," +
+                escapeCSV(request.getReason()) + "," +
+                escapeCSV(request.getPassword())
             );
         }
         writer.flush();
