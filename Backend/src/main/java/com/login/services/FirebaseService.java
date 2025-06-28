@@ -80,7 +80,7 @@ public class FirebaseService {
     }
 
     public boolean sendTestNotification(String token, String title, String body) {
-        logger.info("🧪 Sending test notification to token: {}...", 
+        logger.info("Sending test notification to token: {}...", 
                    token.substring(0, Math.min(20, token.length())) + "...");
         
         return sendNotification(token, title, body);
