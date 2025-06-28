@@ -38,3 +38,6 @@ build/
 
 ### Assets ###
 assets/pdf/*
+
+### Firebase ###
+src/main/resources/firebase-service-account.json
