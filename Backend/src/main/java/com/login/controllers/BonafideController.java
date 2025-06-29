@@ -20,17 +20,21 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
-// import java.io.IOException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import com.login.services.EmailService;
 
 @RestController
 @RequestMapping("/api/bonafide")
 public class BonafideController {
+    @Autowired
+    private EmailService emailService;
+
     @Autowired
     private BonafideService bonafideService;
 
@@ -54,7 +58,7 @@ public class BonafideController {
 
     @PostMapping("/generate")
     public ResponseEntity<BonafideResponse> generateCertificate(@RequestBody BonafideRequest request) {
-        // Fetch student by email to get the purpose
+        
         Student student = studentService.getStudentByEmail(request.getEmail());
         String purpose = student != null ? student.getPurpose() : null;
         BonafideResponse response = bonafideService.generateCertificate(
@@ -132,7 +136,7 @@ public class BonafideController {
         System.out.println("- Enrollment: " + cert.getEnrollmentNumber());
         System.out.println("- Email: " + cert.getEnrollmentNumber().toLowerCase() + "@iiitl.ac.in");
         
-        // Send Firebase notification to student
+        
         try {
             System.out.println(" Attempting to send Firebase notification...");
             Student student = studentService.getStudentByEmail(cert.getEnrollmentNumber().toLowerCase() + "@iiitl.ac.in");
@@ -213,7 +217,7 @@ public class BonafideController {
             if (!cert.isActive()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("status", "error", "message", "Certificate has expired"));
             }
-            // Try to get phone from param, else from student profile
+            
             if (phoneNumber == null || phoneNumber.isBlank()) {
                 Student student = studentService.getStudentByEmail(cert.getEnrollmentNumber().toLowerCase() + "@iiitl.ac.in");
                 phoneNumber = student != null ? student.getMobileNumber() : null;
@@ -227,6 +231,34 @@ public class BonafideController {
             return ResponseEntity.ok(Map.of("status", "success", "message", "Document sent via WhatsApp successfully"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("status", "error", "message", "Failed to send document via WhatsApp: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping("/send-email/{uid}")
+    public ResponseEntity<?> sendCertificateViaEmail(
+            @PathVariable UUID uid,
+            @RequestBody Map<String, String> body) {
+        try {
+            BonafideCertificate cert = bonafideService.getCertificateByUid(uid);
+            if (!cert.isActive()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("status", "error", "message", "Certificate has expired"));
+            }
+            String email = body.get("email");
+            if (email == null || email.isBlank()) {
+                
+                Student student = studentService.getStudentByEmail(cert.getEnrollmentNumber().toLowerCase() + "@iiitl.ac.in");
+                email = student != null ? student.getEmail() : null;
+            }
+            if (email == null || email.isBlank()) {
+                return ResponseEntity.badRequest().body(Map.of("status", "error", "message", "No email provided or found for student."));
+            }
+            byte[] pdfBytes = bonafideService.downloadCertificate(uid).getInputStream().readAllBytes();
+            String filename = cert.getStudentName().replaceAll("\\s+", "_") + "_Bonafide.pdf";
+            
+            emailService.sendCertificate(email, pdfBytes, filename);
+            return ResponseEntity.ok(Map.of("status", "success", "message", "Document sent via Email successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("status", "error", "message", "Failed to send document via Email: " + e.getMessage()));
         }
     }
 } 
