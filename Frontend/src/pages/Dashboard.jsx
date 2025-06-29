@@ -156,6 +156,7 @@ const ExamPage = () => {
         const data = await resp.json();
         toast.success("Certificate Request Submitted sucessfully");
         fetchUserRequests(user.rollNumber);
+        window.dispatchEvent(new Event("certificate-requested"));
         console.log(data);
       } catch (err) {
         console.log(err);
@@ -182,7 +183,7 @@ const ExamPage = () => {
       <header className="bg-secondary rounded-b-[2.5rem] text-foreground py-12 px-4 shadow-md relative">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-            🎓 Exam Cell
+             Exam Cell
           </h1>
           <p className="mt-4 text-sm md:text-lg text-primary">
             Manage and Monitor Examinations Efficiently
