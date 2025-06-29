@@ -88,9 +88,9 @@ public class AdminService {
         List<Student> students = studentRepository.findAll(Sort.by("rollNumber"));
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PrintWriter writer = new PrintWriter(out);
-        // Write CSV header
+        
         writer.println("Email,Mobile Number,Roll Number,Full Name,Program,Course,Semester,Purpose");
-        // Write student data
+        
         for (Student student : students) {
             writer.println(
                 escapeCSV(student.getEmail()) + "," +
@@ -111,9 +111,9 @@ public class AdminService {
         List<PasswordRequest> passwordRequests = passwordReqRepository.findAll(Sort.by("timestamp"));
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PrintWriter writer = new PrintWriter(out);
-        // Write CSV header
+        
         writer.println("Email,Reason,New Password");
-        // Write password request data
+        
         for (PasswordRequest request : passwordRequests) {
             writer.println(
                 escapeCSV(request.getEmail()) + "," +
@@ -125,7 +125,7 @@ public class AdminService {
         return out.toByteArray();
     }
 
-    // Helper method to escape CSV values (if needed)
+    
     private String escapeCSV(String value) {
         if (value == null) return "";
         if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
@@ -137,17 +137,17 @@ public class AdminService {
   
     @Transactional
     public void deleteStudentByRollNumber(String rollNumber) {
-        // First, get the student to find their email
+        
         Student student = studentRepository.findByRollNumber(rollNumber);
         if (student != null) {
-            // Delete all bonafide certificates for this student's email
+            
             String enrollmentNumber = student.getEmail().split("@")[0].toUpperCase();
             List<BonafideCertificate> certificates = bonafideCertificateRepository.findAllByEnrollmentNumber(enrollmentNumber);
             if (!certificates.isEmpty()) {
                 bonafideCertificateRepository.deleteAll(certificates);
             }
             
-            // Delete the student
+            
             studentRepository.deleteByRollNumber(rollNumber);
         } else {
             throw new RuntimeException("Student not found with roll number: " + rollNumber);
@@ -174,7 +174,6 @@ public class AdminService {
             throw new IllegalArgumentException("Admin not found");
         }
         if (admin.getMobileNumber() != null && !admin.getMobileNumber().isEmpty()) {
-            // Send OTP via WhatsApp
             try {
                 java.util.Map<String, Object> request = new java.util.HashMap<>();
                 request.put("messaging_product", "whatsapp");
@@ -193,14 +192,15 @@ public class AdminService {
                     "https://iiitl.ac.in");
                 request.put("text", text);
                 whatsAppService.sendTextMessage(request);
+                emailService.sendOtpEmail(email, otp);
                 return true;
             } catch (Exception e) {
-                // If WhatsApp fails, fallback to email
+                
                 emailService.sendOtpEmail(email, otp);
                 return true;
             }
         } else {
-            // Fallback to email
+            
             emailService.sendOtpEmail(email, otp);
             return true;
         }
@@ -278,7 +278,7 @@ public class AdminService {
         stats.put("totalStudents", studentRepository.count());
         stats.put("totalCertificates", bonafideCertificateRepository.count());
         stats.put("pendingRequests", bonafideCertificateRepository.countByIsSignedFalse());
-        stats.put("approvedToday", 0L); // Placeholder, implement logic if needed
+        stats.put("approvedToday", 0L); 
         return stats;
     }
 } 
