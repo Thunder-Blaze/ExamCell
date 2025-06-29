@@ -11,6 +11,7 @@ import com.login.services.AdminService;
 import com.login.services.BonafideService;
 import com.login.services.WhatsAppService;
 import com.login.services.StudentService;
+import com.login.services.FirebaseService;
 import com.login.entity.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -47,6 +48,9 @@ public class BonafideController {
 
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private FirebaseService firebaseService;
 
     @PostMapping("/generate")
     public ResponseEntity<BonafideResponse> generateCertificate(@RequestBody BonafideRequest request) {
@@ -98,23 +102,71 @@ public class BonafideController {
 
     @PostMapping("/sign")
     public ResponseEntity<?> signCertificate(@RequestBody SignRequest request) {
+        System.out.println("=== SIGN CERTIFICATE REQUEST RECEIVED ===");
+        System.out.println("UID: " + request.getUid());
+        System.out.println("Email: " + request.getEmail());
+        
         Boolean admin = false;
         Boolean valid = jwtUtil.validateToken(request.getToken(), request.getEmail());
+        System.out.println("Token valid: " + valid);
+        
         if (valid) {
             admin = adminService.existsByEmail(request.getEmail());
+            System.out.println("Is admin: " + admin);
         }
+        
         if (!valid || !admin) {
+            System.out.println("Authorization failed - valid: " + valid + ", admin: " + admin);
             Map<String, String> response = new HashMap<>();
             response.put("status", "error");
             response.put("message", "Not Authorized to Sign the Certificate");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
+        
+        System.out.println("Authorization successful, signing certificate...");
         bonafideService.signCertificate(request.getUid());
         BonafideCertificate cert = bonafideService.getCertificateByUid(request.getUid());
+        
+        System.out.println("Certificate details:");
+        System.out.println("- Student Name: " + cert.getStudentName());
+        System.out.println("- Enrollment: " + cert.getEnrollmentNumber());
+        System.out.println("- Email: " + cert.getEnrollmentNumber().toLowerCase() + "@iiitl.ac.in");
+        
+        // Send Firebase notification to student
+        try {
+            System.out.println(" Attempting to send Firebase notification...");
+            Student student = studentService.getStudentByEmail(cert.getEnrollmentNumber().toLowerCase() + "@iiitl.ac.in");
+            
+            if (student != null) {
+                System.out.println("Student found in database");
+                System.out.println("- Student email: " + student.getEmail());
+                System.out.println("- Firebase token: " + (student.getFirebaseToken() != null ? "Present" : "NULL"));
+                
+                if (student.getFirebaseToken() != null && !student.getFirebaseToken().isEmpty()) {
+                    System.out.println("Sending notification to Firebase token...");
+                    boolean notificationSent = firebaseService.sendCertificateSignedNotification(
+                        student.getFirebaseToken(), 
+                        cert.getStudentName(), 
+                        cert.getEnrollmentNumber()
+                    );
+                    System.out.println("Notification sent: " + notificationSent);
+                } else {
+                    System.out.println("No Firebase token found for student");
+                }
+            } else {
+                System.out.println("Student not found in database");
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to send Firebase notification: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
         Log log = new Log();
         log.setMessage("Signed Certificate: " + request.getUid() + " by " + cert.getStudentName() + " (" + cert.getEnrollmentNumber() + ")");
         log.setUser("Admin");
         logRepository.save(log);
+        
+        System.out.println("Certificate signing completed successfully");
         return ResponseEntity.ok().build();
     }
 
