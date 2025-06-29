@@ -185,6 +185,11 @@ public class AdminController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/dashboard-stats")
+    public ResponseEntity<?> getDashboardStats() {
+        return ResponseEntity.ok(adminService.getDashboardStats());
+    }
     
     @ExceptionHandler(Exception.class)
     public ResponseEntity<OtpResponse> handleGenericExceptions(Exception ex) {
