@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader } from "../components/ui/card";
 import { Label } from "@/components/ui/label";
 
 // Define column widths for perfect sync
-const columnWidths = ['180px', '180px', '180px', '180px','180px', '180px', '180px'];
+const columnWidths = ['160px', '160px', '190px', '170px','170px', '170px', '200px'];
 const columns = [
   { key: "request", label: "Requested On" },
   { key: "expire", label: "Expires By" },
